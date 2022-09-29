@@ -14,20 +14,36 @@
  * Execute: Use `npx jest --watch src/__tests__/mock-fn.js` to watch the test
  */
 
-const thumbWar = require('../thumb-war')
-const utils = require('../utils')
+const thumbWar = require('../thumb-war');
+const utils = require('../utils');
 
 test('returns winner', () => {
-  const originalGetWinner = utils.getWinner
-  utils.getWinner = jest.fn((p1, p2) => p1)
+	const originalGetWinner = utils.getWinner;
+	utils.getWinner = jest.fn((p1, p2) => p1);
 
-  const winner = thumbWar('Kent C. Dodds', 'Ken Wheeler')
-  expect(winner).toBe('Kent C. Dodds')
-  // Your code:
+	const winner = thumbWar('Kent C. Dodds', 'Ken Wheeler');
+	expect(winner).toBe('Kent C. Dodds');
+	// Your code:
+	expect(utils.getWinner).toHaveBeenCalledTimes(2);
+	expect(utils.getWinner).toHaveBeenCalledWith('Kent C. Dodds', 'Ken Wheeler');
+	expect(utils.getWinner).toHaveBeenNthCalledWith(
+		1,
+		'Kent C. Dodds',
+		'Ken Wheeler'
+	);
+	expect(utils.getWinner).toHaveBeenNthCalledWith(
+		2,
+		'Kent C. Dodds',
+		'Ken Wheeler'
+	);
+	expect(utils.getWinner.mock.calls).toEqual([
+		['Kent C. Dodds', 'Ken Wheeler'],
+		['Kent C. Dodds', 'Ken Wheeler'],
+	]);
 
-  // cleanup
-  utils.getWinner = originalGetWinner
-})
+	// cleanup
+	utils.getWinner = originalGetWinner;
+});
 
 /**
  * Hints:
@@ -35,5 +51,14 @@ test('returns winner', () => {
  * - https://jestjs.io/docs/en/expect#tohavebeencalledtimesnumber
  * - https://jestjs.io/docs/en/expect#tohavebeennthcalledwithnthcall-arg1-arg2-
  *
- * Checkout master branch to see the answer.
+ */
+
+/**
+ * My Interpretation
+ * One thing monkey-patching cannot catch is
+ * if the function is called incorrectly. When
+ * mocking dependencies we want to make sure the function
+ * is being called correctly. That means you have to have the
+ * correct number of inuts if any and how many times it gets
+ * called.
  */
