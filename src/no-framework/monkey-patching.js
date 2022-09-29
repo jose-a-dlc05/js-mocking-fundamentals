@@ -19,19 +19,33 @@
  * Execute: Use `npx jest --watch ./src/no-framework/monkey-patching.js` to watch the test
  */
 
-const assert = require('assert')
-const thumbWar = require('../thumb-war')
-const utils = require('../utils')
+const assert = require('assert');
+const thumbWar = require('../thumb-war');
+const utils = require('../utils');
 
 // Your code:
 // monkey patch
+const originalGetWinner = utils.getWinner();
+utils.getWinner = (player1, player2) => player1;
 
-const winner = thumbWar('Kent C. Dodds', 'Ken Wheeler')
-assert.strictEqual(winner, 'Kent C. Dodds')
+const winner = thumbWar('Kent C. Dodds', 'Ken Wheeler');
+assert.strictEqual(winner, 'Kent C. Dodds');
 
 // Your code:
 // cleanup
+utils.getWinner = originalGetWinner;
 
 /**
- * Checkout master branch to see the answer.
+ * Mocking seems to be a 3-step procedure:
+ * 1. Import the module/function/api call wanting to be utilized
+ * 2. Mock the module/function i.e. jest.mock('axios')
+ * 3. Fake the function outputs
+ *
+ * What we're doing with mocking overall is controlling the output of what that
+ * dependency that the file/component uses returns.
+ *
+ * The most simplistic way of ding this on your own is 'monkey-patching' as seen above
+ * or in other words overriding the dependency so that the output is the same every time
+ * because if you leave it to the actual implementation, you could get a different result every time...or worse, a charge
+ * goes through. 🥲
  */
