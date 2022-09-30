@@ -61,4 +61,15 @@ test('returns winner', () => {
  * is being called correctly. That means you have to have the
  * correct number of inuts if any and how many times it gets
  * called.
+ *
+ * Another thing with monkey-patching is keeping up with the
+ * mental gymnastics on keeping track of the origin implementation.
+ * To relieve yourself of this, jest offers jest.spyOn which takes in
+ * the module and the method and from there you can use mockImplementation
+ * and mockRestore to restore the original implementation.
+ *
+ * Monkey-patching is also a negative when using ES modules and in that case
+ * , we'd have to mock the entire module with the jest.mock API, which
+ * takes the path to the module and then a callback function returning the object
+ * with the mock version of the module as a property.
  */
